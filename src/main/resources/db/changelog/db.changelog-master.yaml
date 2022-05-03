@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: MYTRANSPORTER/master.yaml
+      relativeToChangelogFile: true

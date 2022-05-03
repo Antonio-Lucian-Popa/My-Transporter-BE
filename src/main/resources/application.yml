@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mytransporter
+    # driverClassName: org.h2.Driver
+    username: postgres
+    password: password
+  jpa:
+    # database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  liquibase:
+    enabled: true
+    drop-first: true # Drops and creates scheme from scratch on every start
+    change-log: classpath:db/changelog/db.changelog-master.yaml

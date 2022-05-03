@@ -52,14 +52,16 @@ id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
 title VARCHAR(20) NOT NULL,
 description text NOT NULL,
 created_at TIMESTAMP NOT NULL,
-notification_action_id uuid NOT NULL
+notification_action_id uuid NOT NULL,
+post_id uuid NOT NULL
 );
 
 create table if not exists notification_actions (
 id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-isRead boolean NOT NULL,
-isNew boolean NOT NULL,
-notification_id uuid NOT NULL
+is_read boolean NOT NULL,
+is_new boolean NOT NULL,
+notification_id uuid NOT NULL,
+user_id uuid NOT NULL
 );
 
 
@@ -140,6 +142,11 @@ notifications
 add
 constraint fk_NotificationActionNotification FOREIGN KEY (notification_action_id) REFERENCES notification_actions(id);
 
+alter table
+notifications
+add
+constraint fk_PostNotification FOREIGN KEY (post_id) REFERENCES posts(id);
+
 
 -- Notification Action table relationships --
 
@@ -147,3 +154,8 @@ alter table
 notification_actions
 add
 constraint fk_NotificationNotificationAction FOREIGN KEY (notification_id) REFERENCES notifications(id);
+
+alter table
+notification_actions
+add
+constraint fk_UserNotificationAction FOREIGN KEY (user_id) REFERENCES users(id);

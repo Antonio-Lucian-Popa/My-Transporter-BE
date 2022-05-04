@@ -3,6 +3,7 @@ package com.asusoftware.myTransporter.user.model;
 
 import com.asusoftware.myTransporter.address.model.Address;
 import com.asusoftware.myTransporter.image.model.Image;
+import com.asusoftware.myTransporter.invitation.model.InvitationLink;
 import com.asusoftware.myTransporter.notification.model.NotificationAction;
 import com.asusoftware.myTransporter.post.model.Post;
 import lombok.Getter;
@@ -45,7 +46,7 @@ public class User {
     private UserRole userRole;
 
     // Un user puo avere solo un'address
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.PERSIST })
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
@@ -68,5 +69,11 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<NotificationAction> notificationAction;
+
+
+    // Only user that have role as TRANSPORTER can have an invitation link
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "invitation_link_id", referencedColumnName = "id")
+    private InvitationLink invitationLink;
 
 }

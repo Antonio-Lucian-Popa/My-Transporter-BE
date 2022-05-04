@@ -1,11 +1,9 @@
 package com.asusoftware.myTransporter.address.controller;
 
+import com.asusoftware.myTransporter.address.model.dto.AddressDto;
 import com.asusoftware.myTransporter.address.services.AddressService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,5 +30,11 @@ public class AddressController {
     @GetMapping(path = "/findAllCity/{countyName}")
     private List<String> findAllCity(@PathVariable(name = "countyName") String countyName) {
         return addressService.findAllCity(countyName);
+    }
+
+    // Find address based on the selected county
+    @PostMapping(path = "/findAddress")
+    private void findAddress(@RequestBody AddressDto addressDto) {
+        addressService.findAddress(addressDto);
     }
 }

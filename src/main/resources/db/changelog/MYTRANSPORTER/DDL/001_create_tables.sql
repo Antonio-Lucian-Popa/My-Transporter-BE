@@ -12,10 +12,10 @@ password VARCHAR(50) NOT NULL,
 birthday DATE NOT NULL,
 user_role VARCHAR(50) NOT NULL,
 address_id uuid NOT NULL,
-post_id uuid NOT NULL,
+post_id uuid,
 image_id uuid NOT NULL,
-followers_id uuid NOT NULL,
-followed_id uuid NOT NULL
+followers_id uuid,
+followed_id uuid
 );
 
 
@@ -23,9 +23,9 @@ create table if not exists address (
 id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
 country VARCHAR(50) NOT NULL,
 city VARCHAR(50) NOT NULL,
-county VARCHAR(50) NOT NULL,
-user_id uuid NOT NULL,
-post_id uuid NOT NULL
+county VARCHAR(250),
+user_id uuid,
+post_id uuid
 );
 
 create table if not exists posts (
@@ -42,8 +42,8 @@ create table if not exists images (
 id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
 value TEXT NOT NULL,
 created_at TIMESTAMP NOT NULL,
-post_id uuid NOT NULL,
-user_id uuid NOT NULL
+post_id uuid,
+user_id uuid
 );
 
 

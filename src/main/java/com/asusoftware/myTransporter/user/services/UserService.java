@@ -66,7 +66,7 @@ public class UserService {
     }
 
     public List<UserDto> findUsersFromAddress(UUID transporterId, AddressDto addressDto) {
-        return userRepository.findUsersFromAddress(addressDto.getCountry(), addressDto.getCounty(), addressDto.getCity())
+        return userRepository.findUsersByAddressId(addressDto.getCountry(), addressDto.getCounty(), addressDto.getCity())
                 .stream()
                 // Pentru fiecare user gasit vezi daca ii apartine la admin in lista sa de followers
                 .filter(user -> user.getFollowed().getId().equals(transporterId))

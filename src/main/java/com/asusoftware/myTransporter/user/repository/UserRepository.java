@@ -11,6 +11,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    @Query("SELECT u FROM User u WHERE u.country=?1 AND u.county=?2 AND u.city=?3")
-    List<User> findUsersFromAddress(String country, String county, String city);
+   // @Query("SELECT u FROM User u WHERE u.country=?1 AND u.county=?2 AND u.city=?3")
+    @Query("SELECT u FROM Users u  WHERE u.address.country=?1 AND u.address.county=?2 AND u.address.city=?3")
+    List<User> findUsersByAddressId(String country, String county, String city);
 }

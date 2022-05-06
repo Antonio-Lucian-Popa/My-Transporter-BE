@@ -23,4 +23,6 @@ public class CreateUserDto {
     private String password;
     private LocalDate birthday;
     private UserRole userRole;
+    // If the user have an invite token from TRANSPORTER
+    private String token;
 }

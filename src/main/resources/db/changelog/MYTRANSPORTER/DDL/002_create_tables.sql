@@ -23,3 +23,8 @@ users
 add
 constraint fk_InvitationLinkUser FOREIGN KEY (invitation_link_id) REFERENCES invitation_links(id);
 
+alter table
+users
+add
+phone_number VARCHAR(50) NOT NULL;
+

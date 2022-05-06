@@ -8,6 +8,7 @@ import com.asusoftware.myTransporter.notification.model.NotificationAction;
 import com.asusoftware.myTransporter.post.model.Post;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@ToString
 @Entity(name = "Users")
 @Table(name = "users")
 public class User {
@@ -37,6 +39,9 @@ public class User {
     @Email
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
 
     @Column(name = "password", nullable = false)
     private String password;

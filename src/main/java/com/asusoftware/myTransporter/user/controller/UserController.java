@@ -3,8 +3,10 @@ package com.asusoftware.myTransporter.user.controller;
 import com.asusoftware.myTransporter.address.model.dto.AddressDto;
 import com.asusoftware.myTransporter.user.model.dto.CreateUserDto;
 import com.asusoftware.myTransporter.user.model.dto.UserDto;
+import com.asusoftware.myTransporter.user.model.dto.UserProfileDto;
 import com.asusoftware.myTransporter.user.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,20 +20,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(path = "/create")
-    public void create(@RequestBody CreateUserDto createUserDto) {
-        userService.create(createUserDto);
+    public ResponseEntity<UserDto> create(@RequestBody CreateUserDto createUserDto) {
+        return userService.create(createUserDto);
     }
 
-    // Only user with Role TRANSPORTER can access this
-    @PostMapping(path = "/createInvitation/{transporterId}")
-    public void createInvitationLink(@PathVariable(name = "transporterId") UUID transporterId) {
-        userService.createInvitationLink(transporterId);
-    }
-
-    // Only user with Role TRANSPORTER can access this
-    @PutMapping(path = "/createInvitation/{transporterId}/{invitationId}")
-    public void createInvitationLink(@PathVariable(name = "transporterId") UUID transporterId, @PathVariable(name = "invitationId") UUID invitationId) {
-        userService.updateInvitationLink(transporterId, invitationId);
+    @GetMapping(path = "/userProfile/{id}")
+    public UserProfileDto getUserProfile(@PathVariable(name = "id") UUID id) {
+        return userService.getUserProfile(id);
     }
 
     @GetMapping(path = "/findAll")

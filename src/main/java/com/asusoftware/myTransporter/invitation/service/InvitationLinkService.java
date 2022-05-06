@@ -1,5 +1,6 @@
 package com.asusoftware.myTransporter.invitation.service;
 
+import com.asusoftware.myTransporter.exceptions.InvitationLinkNotFoundException;
 import com.asusoftware.myTransporter.invitation.model.InvitationLink;
 import com.asusoftware.myTransporter.invitation.repository.InvitationLinkRepository;
 import com.asusoftware.myTransporter.user.model.User;
@@ -31,16 +32,19 @@ public class InvitationLinkService {
     }
 
     public ResponseEntity<InvitationLink> updateInvitationLink(UUID transporterId, UUID invitationId) {
-        User user = userService.findById(transporterId);
-        if(user != null) {
-            InvitationLink invitationLink = generateUpdateInvitationLink(invitationId);
-            if(invitationLink != null) {
-                user.setInvitationLink(invitationLink);
-                userService.saveUser(user);
-                return ResponseEntity.ok().body(invitationLink);
-            }
-        }
-        return ResponseEntity.notFound().build();
+           User transporter = userService.findById(transporterId);
+           InvitationLink invitationLink = generateUpdateInvitationLink(invitationId);
+           transporter.setInvitationLink(invitationLink);
+           userService.saveUser(transporter);
+           return ResponseEntity.ok().body(invitationLink);
+    }
+
+    public ResponseEntity<Object> deleteInvitationLink(UUID invitationLinkId, UUID transporterId) {
+        User transporter = userService.findById(transporterId);
+        transporter.setInvitationLink(null);
+        userService.saveUser(transporter);
+        invitationLinkRepository.deleteById(invitationLinkId);
+        return ResponseEntity.ok().build();
     }
 
     public InvitationLink generateInvitationLink() {
@@ -53,7 +57,8 @@ public class InvitationLinkService {
     }
 
     public InvitationLink generateUpdateInvitationLink(UUID invitationId) {
-        InvitationLink invitationLink = invitationLinkRepository.findById(invitationId).orElse(null);
+        InvitationLink invitationLink = invitationLinkRepository.findById(invitationId)
+                .orElseThrow(() -> new InvitationLinkNotFoundException(String.format("Invitation link id: %s not found!", invitationId)));
         invitationLink.setToken(UUID.randomUUID().toString());
         invitationLink.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
         invitationLink.setExpiredAt(LocalDateTime.now(ZoneOffset.UTC).plusDays(5));

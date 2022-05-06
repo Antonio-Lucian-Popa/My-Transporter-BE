@@ -42,7 +42,7 @@ public class UserService {
         user.setAddress(address);
         if(createUserDto.getToken() != null && createUserDto.getUserRole().equals(UserRole.CLIENT)) {
             User transporter = userRepository.findUserByToken(createUserDto.getToken())
-                    .orElseThrow(() -> new UserNotFoundException(String.format("The transporter with this token: %s not found", createUserDto.getToken())));
+                    .orElseThrow(() -> new UserNotFoundException(String.format("This token: %s are not valid", createUserDto.getToken())));
                 user.setFollowed(transporter);
                 List<User> followers = transporter.getFollowers();
                 followers.add(user);

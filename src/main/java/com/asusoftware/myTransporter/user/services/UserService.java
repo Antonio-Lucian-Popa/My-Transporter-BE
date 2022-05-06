@@ -4,11 +4,13 @@ import com.asusoftware.myTransporter.address.model.Address;
 import com.asusoftware.myTransporter.address.model.dto.AddressDto;
 import com.asusoftware.myTransporter.address.services.AddressService;
 import com.asusoftware.myTransporter.exceptions.UserNotFoundException;
+import com.asusoftware.myTransporter.image.mappers.ImageDtoEntity;
 import com.asusoftware.myTransporter.user.mappers.UserDtoEntity;
 import com.asusoftware.myTransporter.user.mappers.UserProfileDtoEntity;
 import com.asusoftware.myTransporter.user.model.User;
 import com.asusoftware.myTransporter.user.model.UserRole;
 import com.asusoftware.myTransporter.user.model.dto.CreateUserDto;
+import com.asusoftware.myTransporter.user.model.dto.UpdateUserDto;
 import com.asusoftware.myTransporter.user.model.dto.UserDto;
 import com.asusoftware.myTransporter.user.model.dto.UserProfileDto;
 import com.asusoftware.myTransporter.user.repository.UserRepository;
@@ -30,7 +32,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final AddressService addressService;
- //   private final ImageService imageService;
+    private final ImageDtoEntity imageDtoEntity;
     private final UserDtoEntity userDtoEntity;
     private final UserProfileDtoEntity userProfileDtoEntity;
 
@@ -81,6 +83,20 @@ public class UserService {
                 // Pentru fiecare user gasit vezi daca ii apartine la admin in lista sa de followers
                 .filter(user -> user.getFollowed().getId().equals(transporterId))
                 .map(userDtoEntity::userToDto).collect(Collectors.toList());
+    }
+
+    public ResponseEntity<UserDto> update(UUID id, UpdateUserDto updateUserDto) {
+        User user = findById(id);
+        updateUserDto.getImage().setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
+        user.setImage(imageDtoEntity.imageDtoToEntity(updateUserDto.getImage()));
+        user.setFirstName(updateUserDto.getFirstName());
+        user.setLastName(updateUserDto.getLastName());
+        user.setEmail(updateUserDto.getEmail());
+        user.setAddress(addressService.findAddress(updateUserDto.getAddressDto()));
+        user.setBirthday(updateUserDto.getBirthday());
+        user.setPhoneNumber(updateUserDto.getPhoneNumber());
+        userRepository.save(user);
+        return ResponseEntity.ok().body(userDtoEntity.userToDto(user));
     }
 
     /**

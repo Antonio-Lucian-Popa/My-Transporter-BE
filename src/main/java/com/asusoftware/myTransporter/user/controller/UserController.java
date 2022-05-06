@@ -2,6 +2,7 @@ package com.asusoftware.myTransporter.user.controller;
 
 import com.asusoftware.myTransporter.address.model.dto.AddressDto;
 import com.asusoftware.myTransporter.user.model.dto.CreateUserDto;
+import com.asusoftware.myTransporter.user.model.dto.UpdateUserDto;
 import com.asusoftware.myTransporter.user.model.dto.UserDto;
 import com.asusoftware.myTransporter.user.model.dto.UserProfileDto;
 import com.asusoftware.myTransporter.user.services.UserService;
@@ -65,6 +66,11 @@ public class UserController {
     @GetMapping(path = "/findAllTransporterFollowers/{id}/{pageNumber}")
     public ResponseEntity<List<UserDto>> findAllTransporterFollowers(@PathVariable(name = "id") UUID id, @PathVariable(name = "pageNumber") int pageNumber) {
         return userService.findAllTransporterFollowers(id, pageNumber);
+    }
+
+    @PutMapping(path = "/update/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable(name = "id") UUID id, @RequestBody UpdateUserDto updateUserDto) {
+        return userService.update(id, updateUserDto);
     }
 
     /**

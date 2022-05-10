@@ -35,7 +35,7 @@ public class Post {
     private Address address;
 
     // Piu post puo avere solo un'address
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 

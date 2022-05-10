@@ -1,6 +1,7 @@
 package com.asusoftware.myTransporter.user.model.dto;
 
 import com.asusoftware.myTransporter.address.model.dto.AddressDto;
+import com.asusoftware.myTransporter.post.model.dto.PostDto;
 import com.asusoftware.myTransporter.user.model.UserRole;
 import lombok.Getter;
 import lombok.Setter;

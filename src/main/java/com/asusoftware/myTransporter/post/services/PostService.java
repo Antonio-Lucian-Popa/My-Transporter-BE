@@ -9,7 +9,6 @@ import com.asusoftware.myTransporter.post.model.dto.CreatePostDto;
 import com.asusoftware.myTransporter.post.model.dto.PostDto;
 import com.asusoftware.myTransporter.post.repository.PostRepository;
 import com.asusoftware.myTransporter.user.model.User;
-import com.asusoftware.myTransporter.user.model.dto.UserDto;
 import com.asusoftware.myTransporter.user.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -78,5 +77,27 @@ public class PostService {
         } else {
             return ResponseEntity.badRequest().body("Is not possible to delete this post, because you don't have the permission!");
         }
+    }
+
+    public ResponseEntity<PostDto> likePost(UUID userId, UUID postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(String.format("The post with the id: %s was not found!", postId)));
+        User user = userService.findById(userId);
+        List<User> likes = post.getLikes();
+        likes.add(user);
+        post.setLikes(likes);
+        postRepository.save(post);
+        return ResponseEntity.ok(postDtoEntity.postEntityToDto(post));
+    }
+
+    public ResponseEntity<PostDto> unlikePost(UUID userId, UUID postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(String.format("The post with the id: %s was not found!", postId)));
+        User user = userService.findById(userId);
+        List<User> likes = post.getLikes();
+        likes.remove(user);
+        post.setLikes(likes);
+        postRepository.save(post);
+        return ResponseEntity.ok(postDtoEntity.postEntityToDto(post));
     }
 }

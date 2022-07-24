@@ -51,9 +51,12 @@ public class UserService {
                 transporter.setFollowers(followers);
                 userRepository.save(user);
                 return ResponseEntity.ok().body(userDtoEntity.userToDto(user));
-        } else {
+        } else if(createUserDto.getUserRole().equals(UserRole.TRANSPORTER)){
             userRepository.save(user);
             return ResponseEntity.ok().build();
+        } else {
+           // return ResponseEntity.badRequest().body("You need to specify the invitation link");
+            return ResponseEntity.badRequest().build();
         }
        // return ResponseEntity.badRequest().build();
     }

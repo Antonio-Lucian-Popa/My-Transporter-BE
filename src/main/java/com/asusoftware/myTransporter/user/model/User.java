@@ -75,10 +75,13 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<NotificationAction> notificationAction;
 
-
     // Only user that have role as TRANSPORTER can have an invitation link
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "invitation_link_id", referencedColumnName = "id")
     private InvitationLink invitationLink;
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name="post_id")
+    private Post post;
 
 }

@@ -14,17 +14,20 @@ import com.asusoftware.myTransporter.user.model.dto.UpdateUserDto;
 import com.asusoftware.myTransporter.user.model.dto.UserDto;
 import com.asusoftware.myTransporter.user.model.dto.UserProfileDto;
 import com.asusoftware.myTransporter.user.repository.UserRepository;
+import jdk.jfr.ContentType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
+import static org.apache.http.entity.ContentType.*;
+import static org.springframework.http.MediaType.*;
 
 @Service
 @AllArgsConstructor
@@ -132,5 +135,27 @@ public class UserService {
     public ResponseEntity<UserProfileDto> getUserProfile(UUID id) {
         UserProfileDto userProfileDto = userProfileDtoEntity.userProfileToDto(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("The actual user, not found")));
         return userProfileDto != null ? ResponseEntity.ok().body(userProfileDto) : ResponseEntity.notFound().build();
+    }
+
+    public void updateUserProfileImage(UUID userId, MultipartFile multipartFile) {
+        // 1. Check if the image is not empty
+        if(multipartFile.isEmpty()) {
+            throw new IllegalStateException("Cannot upload empty file [" + multipartFile.getSize() + "]");
+        }
+        // 2. If file is an image
+        if(!Arrays.asList(
+                IMAGE_JPEG,
+                IMAGE_PNG,
+                IMAGE_GIF).contains(multipartFile.getContentType())) {
+            throw new IllegalStateException("File must be an image");
+        }
+        // 3. The user exists in our database
+        User user = findById(userId);
+        // 4. Grab some metadata from file if any
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("Content-Type", multipartFile.getContentType());
+        metadata.put("Content-Length", String.valueOf(multipartFile.getSize()));
+        // 5. TODO: Store the image in S3 and update database with s3 image link
+        String fileName = String.format("%s-%s", multipartFile.getName(), UUID.randomUUID());
     }
 }

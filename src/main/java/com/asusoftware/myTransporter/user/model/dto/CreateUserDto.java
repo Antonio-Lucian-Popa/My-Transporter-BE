@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @ToString
 public class CreateUserDto {
 
-    private ImageDto image;
     private String firstName;
     private String lastName;
     private AddressDto addressDto;

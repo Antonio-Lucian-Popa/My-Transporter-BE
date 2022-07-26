@@ -1,7 +1,7 @@
 spring:
   servlet:
     multipart:
-      max-file-size: 50mb
+      max-file-size: 50MB
   datasource:
     url: jdbc:postgresql://localhost:5432/mytransporter
     # driverClassName: org.h2.Driver
@@ -21,3 +21,6 @@ spring:
     enabled: true
     drop-first: true # Drops and creates scheme from scratch on every start
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
+jwt:
+  secret: securesecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecuresecure

@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query("SELECT u FROM Users u  WHERE u.invitationLink.token=?1")
     Optional<User> findUserByToken(String token);
+
+    Optional<User> findByEmail(String email);
 }

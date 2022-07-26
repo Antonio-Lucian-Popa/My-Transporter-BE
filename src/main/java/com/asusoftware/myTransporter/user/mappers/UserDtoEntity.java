@@ -19,7 +19,7 @@ public interface UserDtoEntity {
 
     @Mappings({
             @Mapping(source = "createUserDto.addressDto", target = "address"),
-            @Mapping(source = "createUserDto.image", target = "image"),
+          //  @Mapping(source = "createUserDto.image", target = "image"),
     })
     User userToEntity(CreateUserDto createUserDto);
 }

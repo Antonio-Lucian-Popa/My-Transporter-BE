@@ -9,12 +9,8 @@ import com.asusoftware.myTransporter.user.mappers.UserDtoEntity;
 import com.asusoftware.myTransporter.user.mappers.UserProfileDtoEntity;
 import com.asusoftware.myTransporter.user.model.User;
 import com.asusoftware.myTransporter.user.model.UserRole;
-import com.asusoftware.myTransporter.user.model.dto.CreateUserDto;
-import com.asusoftware.myTransporter.user.model.dto.UpdateUserDto;
-import com.asusoftware.myTransporter.user.model.dto.UserDto;
-import com.asusoftware.myTransporter.user.model.dto.UserProfileDto;
+import com.asusoftware.myTransporter.user.model.dto.*;
 import com.asusoftware.myTransporter.user.repository.UserRepository;
-import jdk.jfr.ContentType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -26,8 +22,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import static org.apache.http.entity.ContentType.*;
-import static org.springframework.http.MediaType.*;
 
 @Service
 @AllArgsConstructor
@@ -42,7 +38,7 @@ public class UserService {
     public ResponseEntity<UserDto> create(CreateUserDto createUserDto) {
         User user = userDtoEntity.userToEntity(createUserDto);
         // TODO: Set password with bycrypt
-        user.getImage().setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
+//        user.getImage().setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
         Address address = addressService.findAddress(createUserDto.getAddressDto());
         user.setAddress(address);
         if(createUserDto.getToken() != null && createUserDto.getUserRole().equals(UserRole.CLIENT)) {
@@ -56,7 +52,7 @@ public class UserService {
                 return ResponseEntity.ok().body(userDtoEntity.userToDto(user));
         } else if(createUserDto.getUserRole().equals(UserRole.TRANSPORTER)){
             userRepository.save(user);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok().body(userDtoEntity.userToDto(user));
         } else {
            // return ResponseEntity.badRequest().body("You need to specify the invitation link");
             return ResponseEntity.badRequest().build();
@@ -144,11 +140,12 @@ public class UserService {
         }
         // 2. If file is an image
         if(!Arrays.asList(
-                IMAGE_JPEG,
-                IMAGE_PNG,
-                IMAGE_GIF).contains(multipartFile.getContentType())) {
+                IMAGE_JPEG.getMimeType(),
+                IMAGE_PNG.getMimeType(),
+                IMAGE_GIF.getMimeType()).contains(multipartFile.getContentType())) {
             throw new IllegalStateException("File must be an image");
         }
+
         // 3. The user exists in our database
         User user = findById(userId);
         // 4. Grab some metadata from file if any
@@ -157,5 +154,12 @@ public class UserService {
         metadata.put("Content-Length", String.valueOf(multipartFile.getSize()));
         // 5. TODO: Store the image in S3 and update database with s3 image link
         String fileName = String.format("%s-%s", multipartFile.getName(), UUID.randomUUID());
+        System.out.println("FileName: " + fileName);
+        System.out.println("Metadata: " + metadata);
+        System.out.println("User: " + user);
+    }
+
+    public ResponseEntity<UserDto> login(Login login) {
+        return null;
     }
 }

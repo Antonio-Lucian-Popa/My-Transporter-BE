@@ -13,7 +13,7 @@ birthday DATE NOT NULL,
 user_role VARCHAR(50) NOT NULL,
 address_id uuid NOT NULL,
 post_id uuid,
-image_id uuid NOT NULL,
+image_id uuid,
 followers_id uuid,
 followed_id uuid
 );

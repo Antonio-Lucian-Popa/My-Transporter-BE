@@ -1,14 +1,17 @@
 package com.asusoftware.myTransporter.user.controller;
 
 import com.asusoftware.myTransporter.address.model.dto.AddressDto;
-import com.asusoftware.myTransporter.user.model.dto.CreateUserDto;
-import com.asusoftware.myTransporter.user.model.dto.UpdateUserDto;
-import com.asusoftware.myTransporter.user.model.dto.UserDto;
-import com.asusoftware.myTransporter.user.model.dto.UserProfileDto;
+import com.asusoftware.myTransporter.jwt.JWTUtility;
+import com.asusoftware.myTransporter.user.model.dto.*;
 import com.asusoftware.myTransporter.user.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +26,9 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final JWTUtility jwtUtility;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
 
 
     /**
@@ -35,13 +41,36 @@ public class UserController {
         return userService.create(createUserDto);
     }
 
-    @PostMapping(path = "/updateImageProfile/${userId}",
+   /* @PostMapping(path = "/login")
+    public ResponseEntity<UserDto> login(@RequestBody Login login) {
+        return userService.login(login);
+    } */
+
+    @PostMapping(path = "/login")
+    public JwtResponse authenticate(@RequestBody Login login) throws Exception {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            login.getUsername(),
+                            login.getPassword()
+                    )
+            );
+        } catch (BadCredentialsException e) {
+            throw  new Exception("Invalid credentials", e);
+        }
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
+        final String token = jwtUtility.generateToken(userDetails);
+        return new JwtResponse(token);
+    }
+
+    @PostMapping(path = "/updateImageProfile/{userId}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public void updateUserProfileImage(@PathVariable("userId") UUID userId,
-                                 @RequestParam("profileImage") MultipartFile multipartFile) throws IOException {
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+                                 @RequestParam("profileImage") MultipartFile multipartFile) {
+        System.out.println(multipartFile.getContentType());
         userService.updateUserProfileImage(userId, multipartFile);
     }
 

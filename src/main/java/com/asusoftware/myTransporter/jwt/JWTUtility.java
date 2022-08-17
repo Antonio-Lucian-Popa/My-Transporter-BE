@@ -1,8 +1,7 @@
 package com.asusoftware.myTransporter.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,18 @@ public class JWTUtility implements Serializable {
 
     // for retreiving any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException ex){
+            System.out.println("Expired JWT token");
+           // httpServletRequest.setAttribute("expired",ex.getMessage());
+            throw new com.asusoftware.myTransporter.exceptions.ExpiredJwtException("JWT expired");
+        } catch (SignatureException ex){
+            System.out.println("Invalid JWT Signature");
+        }catch (MalformedJwtException ex){
+            System.out.println("Invalid JWT token");
+        }
+        return null;
     }
 
     // check if the token has expired

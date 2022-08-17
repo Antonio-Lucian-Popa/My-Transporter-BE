@@ -64,6 +64,11 @@ public class UserController {
         return new JwtResponse(token);
     }
 
+    @GetMapping(path = "/findUserId/{email}")
+    public UUID findUserId(@PathVariable(name = "email") String email) {
+        return userService.findUserId(email);
+    }
+
     @PostMapping(path = "/updateImageProfile/{userId}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE

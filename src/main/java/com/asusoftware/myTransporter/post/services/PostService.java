@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -40,7 +41,12 @@ public class PostService {
     public void create(UUID userId, CreatePostDto createPostDto) {
         User user = userService.findById(userId);
         Post post = postDtoEntity.createPostDtoToEntity(createPostDto);
-        Address address = addressService.findAddress(createPostDto.getAddressDto());
+        Address address;
+        if(createPostDto.getAddressDto().getCity() != null && !Objects.equals(createPostDto.getAddressDto().getCity(), "")) {
+            address = addressService.findAddress(createPostDto.getAddressDto());
+        } else {
+            address = null;
+        }
         List<Post> posts = user.getPosts();
         posts.add(post);
         user.setPosts(posts);

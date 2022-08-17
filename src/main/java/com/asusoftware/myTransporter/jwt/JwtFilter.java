@@ -1,6 +1,9 @@
 package com.asusoftware.myTransporter.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,6 +24,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTUtility jwtUtility;
+
+    @Autowired
+    private HandlerExceptionResolver handlerExceptionResolver;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -35,17 +42,23 @@ public class JwtFilter extends OncePerRequestFilter {
             username = jwtUtility.getUsernameFromToken(token);
         }
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if(jwtUtility.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
+        try {
+            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if(jwtUtility.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    usernamePasswordAuthenticationToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
 
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                }
             }
+            filterChain.doFilter(request, response);
+        } catch (AccessDeniedException | ExpiredJwtException | SignatureException exception) {
+            System.out.println("Intra");
+            handlerExceptionResolver.resolveException(request, response, null, exception);
         }
-        filterChain.doFilter(request, response);
+
     }
 }

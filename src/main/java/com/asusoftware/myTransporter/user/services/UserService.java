@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,10 +35,12 @@ public class UserService {
     private final ImageDtoEntity imageDtoEntity;
     private final UserDtoEntity userDtoEntity;
     private final UserProfileDtoEntity userProfileDtoEntity;
+    private final PasswordEncoder passwordEncoder;
 
     public ResponseEntity<UserDto> create(CreateUserDto createUserDto) {
         User user = userDtoEntity.userToEntity(createUserDto);
-        // TODO: Set password with bycrypt
+        // Set password with bycrypt
+        user.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
 //        user.getImage().setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
         Address address = addressService.findAddress(createUserDto.getAddressDto());
         user.setAddress(address);
@@ -58,6 +61,10 @@ public class UserService {
             return ResponseEntity.badRequest().build();
         }
        // return ResponseEntity.badRequest().build();
+    }
+
+    public UUID findUserId(String email) {
+        return userRepository.findByEmail(email).get().getId();
     }
 
 

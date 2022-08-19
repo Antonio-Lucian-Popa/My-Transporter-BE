@@ -16,7 +16,8 @@ public class MyTransporterBeApplication implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 				.allowedOrigins(
-						"http://localhost:4200"
+						"http://localhost:4200",
+						"http://localhost:8100"
 				)
 				.allowedMethods(
 						"GET",

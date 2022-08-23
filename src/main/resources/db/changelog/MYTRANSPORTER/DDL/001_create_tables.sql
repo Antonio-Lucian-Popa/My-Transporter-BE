@@ -35,7 +35,8 @@ description TEXT NOT NULL,
 created_at TIMESTAMP NOT NULL,
 address_id uuid,
 user_id uuid NOT NULL,
-image_id uuid NOT NULL
+image_id uuid NOT NULL,
+like_id uuid
 );
 
 create table if not exists images (

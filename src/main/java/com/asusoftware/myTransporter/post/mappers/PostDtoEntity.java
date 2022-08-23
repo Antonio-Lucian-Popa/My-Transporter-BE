@@ -23,6 +23,7 @@ public interface PostDtoEntity {
             @Mapping(source = "post.address", target = "addressDto"),
             @Mapping(source = "post.image", target = "imageDto"),
             @Mapping(source = "post.user", target = "userDto"),
+            @Mapping(source = "post.likes", target = "likes"),
     })
     PostDto postEntityToDto(Post post);
 }

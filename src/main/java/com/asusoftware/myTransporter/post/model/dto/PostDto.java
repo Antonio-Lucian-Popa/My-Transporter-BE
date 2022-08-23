@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,7 +19,11 @@ public class PostDto {
     private UUID id;
     private String title;
     private String description;
+    private LocalDateTime createdAt;
     private AddressDto addressDto;
     private ImageDto imageDto;
+    // The owner of the post
     private UserDto userDto;
+    // User that likes this post
+    private List<UserDto> likes;
 }

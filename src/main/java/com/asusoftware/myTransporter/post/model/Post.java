@@ -44,8 +44,8 @@ public class Post {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
-    // Un user poatea avea mai multi urmaritori
-    @OneToMany(mappedBy = "post")
+    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "like_id", referencedColumnName = "id")
     public List<User> likes;
 
 }

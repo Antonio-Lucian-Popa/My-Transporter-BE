@@ -10,7 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-@Mapper(uses = {AddressDtoEntity.class, ImageDtoEntity.class, UserDtoEntity.class}, componentModel = "spring")
+@Mapper(uses = {AddressDtoEntity.class, ImageDtoEntity.class, UserDtoEntity.class, LikeDtoEntity.class}, componentModel = "spring")
 public interface PostDtoEntity {
 
     @Mappings({
@@ -23,7 +23,7 @@ public interface PostDtoEntity {
             @Mapping(source = "post.address", target = "addressDto"),
             @Mapping(source = "post.image", target = "imageDto"),
             @Mapping(source = "post.user", target = "userDto"),
-            @Mapping(source = "post.likes", target = "likes"),
+            @Mapping(source = "post.usersLike", target = "likes"),
     })
     PostDto postEntityToDto(Post post);
 }

@@ -5,6 +5,7 @@ import com.asusoftware.myTransporter.address.model.Address;
 import com.asusoftware.myTransporter.image.model.Image;
 import com.asusoftware.myTransporter.invitation.model.InvitationLink;
 import com.asusoftware.myTransporter.notification.model.NotificationAction;
+import com.asusoftware.myTransporter.post.model.Likes;
 import com.asusoftware.myTransporter.post.model.Post;
 import lombok.Getter;
 import lombok.Setter;
@@ -84,4 +85,11 @@ public class User {
     @JoinColumn(name="post_id")
     private Post post;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    public List<Likes> postsLike;
+
 }
+
+// Cascade Type PERSIST(save) propagates the persist operation from a parent to a child entity. When we save the person entity, the address entity will also get saved.
+// When we use CascadeType.DETACH(remove child from persistent context), the child entity will also get removed from the persistent context.
+// When we use this operation with Cascade Type REFRESH, the child entity also gets reloaded from the database whenever the parent entity is refreshed.

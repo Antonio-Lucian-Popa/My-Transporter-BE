@@ -35,8 +35,7 @@ description TEXT NOT NULL,
 created_at TIMESTAMP NOT NULL,
 address_id uuid,
 user_id uuid NOT NULL,
-image_id uuid NOT NULL,
-like_id uuid
+image_id uuid NOT NULL
 );
 
 create table if not exists images (
@@ -116,12 +115,12 @@ constraint fk_AddressPost FOREIGN KEY (address_id) REFERENCES address(id);
 alter table
 posts
 add
-constraint fk_AddressUser FOREIGN KEY (user_id) REFERENCES users(id);
+constraint fk_UserPost FOREIGN KEY (user_id) REFERENCES users(id);
 
 alter table
 posts
 add
-constraint fk_AddressImage FOREIGN KEY (image_id) REFERENCES images(id);
+constraint fk_ImagePost FOREIGN KEY (image_id) REFERENCES images(id);
 
 -- Images table relationships --
 

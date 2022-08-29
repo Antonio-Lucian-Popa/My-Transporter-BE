@@ -44,8 +44,7 @@ public class Post {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private Image image;
 
-    @OneToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "like_id", referencedColumnName = "id")
-    public List<User> likes;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    public List<Likes> usersLike;
 
 }

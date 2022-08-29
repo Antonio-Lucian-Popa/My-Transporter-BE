@@ -2,6 +2,7 @@ package com.asusoftware.myTransporter.post.model.dto;
 
 import com.asusoftware.myTransporter.address.model.dto.AddressDto;
 import com.asusoftware.myTransporter.image.model.dto.ImageDto;
+import com.asusoftware.myTransporter.post.model.Likes;
 import com.asusoftware.myTransporter.user.model.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +26,5 @@ public class PostDto {
     // The owner of the post
     private UserDto userDto;
     // User that likes this post
-    private List<UserDto> likes;
+    private List<LikesDto> likes;
 }

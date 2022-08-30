@@ -12,8 +12,8 @@ import org.mapstruct.Mappings;
 public interface LikeDtoEntity {
 
     @Mappings({
-            @Mapping(source = "post.user", target = "user"),
-            @Mapping(source = "post.createdAt", target = "createdAt"),
+            @Mapping(source = "likes.user", target = "user"),
+            @Mapping(source = "likes.createdAt", target = "createdAt"),
     })
     LikesDto likeEntityToDto(Likes likes);
 }

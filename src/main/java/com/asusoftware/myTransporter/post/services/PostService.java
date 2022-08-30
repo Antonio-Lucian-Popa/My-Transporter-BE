@@ -102,13 +102,11 @@ public class PostService {
         like.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
         likeRepository.save(like);
 
-        // Luam toate like-urile de pe acest post
+     /*   // Luam toate like-urile de pe acest post
         List<Likes> likes = post.getUsersLike();
         // Adaugam noul like in lista
-        likes.add(like);
+        likes.add(like); */
         postRepository.save(post);
-
-
         return ResponseEntity.ok(postDtoEntity.postEntityToDto(post));
     }
 
@@ -136,3 +134,9 @@ public class PostService {
         return ResponseEntity.ok(postDtoEntity.postEntityToDto(post));
     }
 }
+
+
+// TODO: teste de facut cu unlike:
+// Stergerea postari, si sa vedem daca mai ramane like-ul(ar trebuii sa se stearga like-ul) @Merge
+// Stergem un like din mai multe la o postare @Merge
+// Daca sterg userul postari, daca mai ramane postare si like-ul(Ar trebuii sa se stearga postarea si like)

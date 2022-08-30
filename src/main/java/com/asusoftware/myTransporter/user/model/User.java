@@ -85,7 +85,7 @@ public class User {
     @JoinColumn(name="post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     public List<Likes> postsLike;
 
 }

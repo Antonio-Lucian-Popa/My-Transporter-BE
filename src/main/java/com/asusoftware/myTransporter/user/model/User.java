@@ -56,7 +56,7 @@ public class User {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @OneToMany(mappedBy="user")
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
     private List<Post> posts;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -81,9 +81,9 @@ public class User {
     @JoinColumn(name = "invitation_link_id", referencedColumnName = "id")
     private InvitationLink invitationLink;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+   /* @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="post_id")
-    private Post post;
+    private Post post; */
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     public List<Likes> postsLike;
